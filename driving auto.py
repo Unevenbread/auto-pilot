@@ -78,6 +78,7 @@ def on_click(x, y, button, pressed): #gpt  #should check if currently clicked bu
 def next_click(delay_time):
     try:
         while not should_exit:
+            global paused
             if should_exit is True:
                 break
             elif not paused:
@@ -100,7 +101,11 @@ def next_click(delay_time):
             else:
                 print("Loop paused...")
                 while paused:
-                    time.sleep(0.1)
+                    if should_exit is True:
+                        paused = False
+                        exit_program
+                    else:
+                        time.sleep(0.1)
             time.sleep(0.1)  # Add a small delay to avoid excessive CPU usage
     except KeyboardInterrupt:
         print("Loop interrupted. Exiting the code.")
