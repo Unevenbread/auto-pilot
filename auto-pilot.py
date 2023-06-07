@@ -72,19 +72,17 @@ def pixel_click(org_pos):  # clicks location and moves back - used in next_click
     print("next")
     time.sleep(3)
 
-
 def on_click(
     x, y, button, pressed
-):  # gpt  #should check if currently clicked but doesn't work rn, also does'nt fuck it up so we gucci
+): 
     global paused
-    if button == mouse.Button.right:
+    if button == mouse.Button.left:
         if pressed:
             paused = True
-            print("Loop paused.")
+            print("left click detected")
         else:
             paused = False
             print("Loop resumed.")
-
 
 def next_click(delay_time):
     try:
