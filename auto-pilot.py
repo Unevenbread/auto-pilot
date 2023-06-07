@@ -8,7 +8,7 @@ import sys
 from pynput import mouse
 
 delay_time = 1
-pyautogui.PAUSE = delay_time
+pyautogui.PAUSE = 0.1
 im = pyautogui.screenshot()
 pos = (1883, 1030)
 rgb = im.getpixel(pos)
@@ -93,7 +93,7 @@ def next_click(delay_time):
             if should_exit is True:
                 break
             elif not paused:
-                pyautogui.PAUSE = delay_time
+                time.sleep(delay_time)
                 print(f"Loop running... Delay ({delay_time})")
                 org_pos = pyautogui.position()
                 rgb_color = rgb
@@ -102,12 +102,12 @@ def next_click(delay_time):
                 # i = 1
                 if current_color == rgb_goal:
                     pixel_click(org_pos)
-                    delay_time = 0.25  # lowers delay in case so the code can make sure it clicked
+                    delay_time = 0.5  # lowers delay in case so the code can make sure it clicked
                 else:
-                    time.sleep(5)
+                    time.sleep(2)
                     print("nothing found")
                     time.sleep(1)
-                    delay_time = 1  # resets delay after click
+                    delay_time = 5
                     continue
             else:
                 print("Loop paused...")
