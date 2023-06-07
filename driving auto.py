@@ -15,7 +15,7 @@ rgb_goal = (186, 187, 186)
 org = pyautogui.position()
 # Global flag variable to control pause/unpause
 should_exit = False
-
+#test
 paused = False
 
 def toggle_pause(): #gpt
