@@ -108,7 +108,7 @@ def next_click(delay_time):
 
 # Create the system tray icon
 def create_tray_icon():         #gpt bullshit
-    image = Image.open(r"C:\Users\DCutler\Desktop\testing\icon.png")  # Replace with the path to your icon image
+    image = Image.open(r"C:\Users\DCutler\Desktop\testing\tray_icon.png")  # Replace with the path to your icon image
     menu = (
         item("Toggle Pause/Unpause", toggle_pause),
         item("Exit", exit_program),
