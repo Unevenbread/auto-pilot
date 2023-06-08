@@ -122,28 +122,6 @@ mouse_listener = mouse.Listener(on_click=on_click)
 # Start the mouse listener
 mouse_listener.start()
 
-
-# Run the next_click loop in a separate thread
-# import threading
-# thread = threading.Thread(target=next_click)
-# thread.start()
 next_click(delay_time)
 # Run the system tray icon in the main thread
 #create_tray_icon()
-
-
-# try:
-#     while True:
-#         # Code to be executed in the loop
-#         next_locate()
-#         # Delay for 5 seconds
-#         time.sleep(3)
-# except KeyboardInterrupt:
-#     print("Loop interrupted. Exiting the code.")
-
-# Get and print the mouse coordinates.
-#x, y = pyautogui.position()
-# positionStr = 'X: ' + str(x).rjust(4) + ' Y: ' + str(y).rjust(4)
-
-
-    # pyautogui.moveTo
