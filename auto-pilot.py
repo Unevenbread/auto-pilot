@@ -51,17 +51,15 @@ def next_locate():  # unused because the image doesn't grab, also only works on 
 
 
 def get_pos_rgb():  # used for finding pixel position and and rgb
-    for i in range(10):
-        if i == 10:
-            break
-        else:
+    for i in range(11):
+        if i < 11:
             pos = pyautogui.position()
             i = i + 1
-            print(pos)
             rgb = im.getpixel((pos))
+            print(pos)
             print(rgb)
-            time.sleep(3)
-            continue
+            time.sleep(3)  
+
 
 
 def pixel_click(org_pos):  # clicks location and moves back - used in next_click
@@ -131,12 +129,13 @@ def create_tray_icon():  # gpt bullshit
     tray_icon = pystray.Icon("TROLLED", image, "Tooltip", menu)
     tray_icon.run()
 
-next_click(delay_time)
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
 
 # Start the mouse listener
 mouse_listener.start()
+
+next_click(delay_time)
 #create_tray_icon()
 # Start the main loop
 # next_click(delay_time)
