@@ -129,6 +129,7 @@ def create_tray_icon():  # gpt bullshit
     tray_icon = pystray.Icon("TROLLED", image, "Tooltip", menu)
     tray_icon.run()
 
+next_click(delay_time)
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
 
