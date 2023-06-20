@@ -67,7 +67,7 @@ def pixel_click(org_pos):  # clicks location and moves back - used in next_click
     pyautogui.click(pos)
     pyautogui.moveTo(org_pos)
     pyautogui.PAUSE = delay_time  # returns pyautogui.pause to original value
-    print("next")
+    print("Next slide.")
     time.sleep(3)
 
 
@@ -77,7 +77,7 @@ def on_click(x, y, button, pressed):
     if button == mouse.Button.left and paused == False:
         if pressed:
             click_paused = True
-            print("left click detected")
+            print("Left click detected, Pausing...")
         else:
             click_paused = False
             print("Loop resumed.")
@@ -88,31 +88,29 @@ def next_click(delay_time):
         while not should_exit:
             global paused
             global click_paused
-            if should_exit is True:
+            if should_exit is True:  # ends if exit true
                 break
-            elif not paused:
+            elif not paused and not click_paused:  # checks for paused
                 time.sleep(delay_time)
                 print(f"Loop running... Delay ({delay_time})")
                 org_pos = pyautogui.position()
                 rgb_color = rgb
                 current_color = pyautogui.pixel(pos[0], pos[1])
-                # print (f"current_color {current_color}")
-                # i = 1
-                if current_color == rgb_goal:
+                if current_color == rgb_goal and paused == False:
                     pixel_click(org_pos)
                     delay_time = (
                         0.5  # lowers delay in case so the code can make sure it clicked
                     )
-                else:
+
+                elif not paused and not click_paused:
                     time.sleep(2)
-                    print("nothing found")
+                    print("Nothing found.")
                     time.sleep(1)
-                    delay_time = 5
+                    delay_time = 3
                     continue
             else:
                 print("Loop paused...")
-                while paused:
-                    click_paused = False
+                while paused or click_paused:
                     if should_exit is True:
                         paused = False
                         exit_program
