@@ -18,6 +18,7 @@ org = pyautogui.position()
 should_exit = False
 
 paused = False
+click_paused = False
 
 
 def toggle_pause():  # gpt
@@ -58,8 +59,7 @@ def get_pos_rgb():  # used for finding pixel position and and rgb
             rgb = im.getpixel((pos))
             print(pos)
             print(rgb)
-            time.sleep(3)  
-
+            time.sleep(3)
 
 
 def pixel_click(org_pos):  # clicks location and moves back - used in next_click
@@ -70,22 +70,24 @@ def pixel_click(org_pos):  # clicks location and moves back - used in next_click
     print("next")
     time.sleep(3)
 
-def on_click(
-    x, y, button, pressed
-): 
+
+def on_click(x, y, button, pressed):
     global paused
-    if button == mouse.Button.left:
+    global click_paused
+    if button == mouse.Button.left and paused == False:
         if pressed:
-            paused = True
+            click_paused = True
             print("left click detected")
         else:
-            paused = False
+            click_paused = False
             print("Loop resumed.")
+
 
 def next_click(delay_time):
     try:
         while not should_exit:
             global paused
+            global click_paused
             if should_exit is True:
                 break
             elif not paused:
@@ -98,7 +100,9 @@ def next_click(delay_time):
                 # i = 1
                 if current_color == rgb_goal:
                     pixel_click(org_pos)
-                    delay_time = 0.5  # lowers delay in case so the code can make sure it clicked
+                    delay_time = (
+                        0.5  # lowers delay in case so the code can make sure it clicked
+                    )
                 else:
                     time.sleep(2)
                     print("nothing found")
@@ -108,6 +112,7 @@ def next_click(delay_time):
             else:
                 print("Loop paused...")
                 while paused:
+                    click_paused = False
                     if should_exit is True:
                         paused = False
                         exit_program
@@ -129,6 +134,7 @@ def create_tray_icon():  # gpt bullshit
     tray_icon = pystray.Icon("TROLLED", image, "Tooltip", menu)
     tray_icon.run()
 
+
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
 
@@ -136,6 +142,6 @@ mouse_listener = mouse.Listener(on_click=on_click)
 mouse_listener.start()
 
 next_click(delay_time)
-#create_tray_icon()
+# create_tray_icon()
 # Start the main loop
 # next_click(delay_time)
