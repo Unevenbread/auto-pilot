@@ -109,7 +109,11 @@ def next_click(delay_time):
                     delay_time = 3
                     continue
             else:
+<<<<<<< HEAD
                 print("Loop paused.")
+=======
+                print("Loop paused...")
+>>>>>>> ee3076d322873d13fe238e3ffcb38ff9e9a6476a
                 while paused or click_paused:
                     if should_exit is True:
                         paused = False
