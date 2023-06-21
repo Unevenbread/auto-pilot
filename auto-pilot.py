@@ -6,6 +6,8 @@ from pystray import MenuItem as item
 from PIL import Image
 import sys
 from pynput import mouse
+from datetime import datetime
+import datetime
 
 delay_time = 1
 pyautogui.PAUSE = 0.1
@@ -16,11 +18,18 @@ rgb_goal = (186, 187, 186)
 org = pyautogui.position()
 # Global flag variable to control pause/unpause
 should_exit = False
-
 paused = False
 click_paused = False
+first_time = datetime.datetime.now()
+fol = True
+later_time = ""
 
-
+def time_diff(a, b):
+    difference = (a - b)
+    datetime.timedelta(0, 8, 562000)
+    seconds_in_day = 24 * 60 * 60
+    divmod(difference.days * seconds_in_day + difference.seconds, 60)
+    
 def toggle_pause():  # gpt
     global paused
     paused = not paused
@@ -29,6 +38,9 @@ def toggle_pause():  # gpt
 
 def exit_program():
     global should_exit
+    Timestamp("Exited code: ")
+    print(time_diff(later_time, first_time))
+    
     should_exit = True
 
 
@@ -39,7 +51,7 @@ keyboard.add_hotkey("ctrl+f9", exit_program)
 
 def next_locate():  # unused because the image doesn't grab, also only works on one monitor
     try:
-        photo = pyautogui.locateOnScreen(r".\yes_next.png")
+        photo = pyautogui.locateOnScreen("yes_next.png")
         if photo is not None:
             photo_center = pyautogui.center(photo)
             pyautogui.click(photo_center)
@@ -119,12 +131,15 @@ def next_click(delay_time):
             time.sleep(0.1)  # Add a small delay to avoid excessive CPU usage
     except KeyboardInterrupt:
         print("Loop interrupted. Exiting the code.")
-        exit
+        # now = datetime.now()
+        Timestamp("Exited code: ")
+        print(time_diff(later_time, first_time))
+        exit_program
 
 
 # Create the system tray icon
 def create_tray_icon():  # gpt bullshit
-    image = Image.open(r".\tray_icon.png")  # Replace with the path to your icon image
+    image = Image.open("tray_icon.png")  # Replace with the path to your icon image
     menu = (
         item("Toggle Pause/Unpause", toggle_pause),
         item("Exit", exit_program),
@@ -132,6 +147,27 @@ def create_tray_icon():  # gpt bullshit
     tray_icon = pystray.Icon("TROLLED", image, "Tooltip", menu)
     tray_icon.run()
 
+
+def Timestamp(prefix):
+    global fol
+    # datetime object containing current date and time
+    if fol:
+        now = datetime.datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        first_time = now
+        fol = False
+    # dd/mm/YY H:M:S
+    else:
+        now = datetime.datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        later_time = now
+    print(prefix + dt_string)
+    with open("timestamps.log", "a") as a:
+        a.write(f"\n{prefix} {dt_string}")
+
+
+# Start of code
+Timestamp("Opened code: ")
 
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
