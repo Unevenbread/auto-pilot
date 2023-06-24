@@ -82,11 +82,10 @@ def pixel_click(org_pos):  # clicks location and moves back - used in next_click
     print("Next slide.")
     time.sleep(3)
 
-
 def on_click(x, y, button, pressed):
     global paused
     global click_paused
-    if button == mouse.Button.left and paused == False:
+    if button == mouse.Button.left and paused = False:
         if pressed:
             click_paused = True
             print("Left click detected, Pausing...")
