@@ -8,6 +8,7 @@ import sys
 from pynput import mouse
 from datetime import datetime
 import datetime
+import os
 
 delay_time = 1
 pyautogui.PAUSE = 0.1
@@ -178,7 +179,6 @@ def td_calc():
             if minutes < 1:
                 print(f"Time elapsed: {seconds} seconds")
                 a.write(f"\n\t Time elapsed: {seconds} seconds")
-
                 return minutes, seconds
             else:
                 a.write(f"\n\t Time elapsed: {minutes} minutes, {seconds} seconds")
@@ -189,16 +189,21 @@ def td_calc():
             return None, None
 
 
-# Start of code
-Timestamp("Opened code: ")
+###### Start of code ######
+
+# first_time defined and reason inputted
+os.chdir("./Driving course/")
+Timestamp("\nOpened code: ")
+reason = input("Input reason: ")
+cap_reason = reason.title()
+with open("timestamps.log", "a") as a:
+    a.write(f"\nReason: {cap_reason}")
 
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
-
-# Start the mouse listener
 mouse_listener.start()
 
-next_click(delay_time)
-# create_tray_icon()
 # Start the main loop
-# next_click(delay_time)
+next_click(delay_time)
+
+###### End of code ######
