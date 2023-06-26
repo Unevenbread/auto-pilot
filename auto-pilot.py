@@ -20,16 +20,11 @@ org = pyautogui.position()
 should_exit = False
 paused = False
 click_paused = False
-first_time = datetime.datetime.now()
+first_time = None
 fol = True
-later_time = ""
+later_time = None
 
-def time_diff(a, b):
-    difference = (a - b)
-    datetime.timedelta(0, 8, 562000)
-    seconds_in_day = 24 * 60 * 60
-    divmod(difference.days * seconds_in_day + difference.seconds, 60)
-    
+
 def toggle_pause():  # gpt
     global paused
     paused = not paused
@@ -38,9 +33,9 @@ def toggle_pause():  # gpt
 
 def exit_program():
     global should_exit
-    Timestamp("Exited code: ")
-    print(time_diff(later_time, first_time))
-    
+    Timestamp("Exited: ")
+    td_div(first_time, later_time)
+    td_calc()
     should_exit = True
 
 
@@ -119,7 +114,6 @@ def next_click(delay_time):
                     print("Nothing found.")
                     time.sleep(1)
                     delay_time = 3
-                    continue
             else:
                 print("Loop paused.")
                 while paused or click_paused:
@@ -132,8 +126,10 @@ def next_click(delay_time):
     except KeyboardInterrupt:
         print("Loop interrupted. Exiting the code.")
         # now = datetime.now()
-        Timestamp("Exited code: ")
-        print(time_diff(later_time, first_time))
+        Timestamp("Exited: ")
+        td_div(first_time, later_time)
+        td_calc()
+        # print(td_div(later_time, first_time))
         exit_program
 
 
@@ -148,22 +144,49 @@ def create_tray_icon():  # gpt bullshit
     tray_icon.run()
 
 
+datetime.timedelta
+
+
 def Timestamp(prefix):
-    global fol
+    global first_time, later_time
+
+    now = datetime.datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     # datetime object containing current date and time
-    if fol:
-        now = datetime.datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    if first_time is None:
         first_time = now
-        fol = False
     # dd/mm/YY H:M:S
     else:
-        now = datetime.datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         later_time = now
     print(prefix + dt_string)
     with open("timestamps.log", "a") as a:
         a.write(f"\n{prefix} {dt_string}")
+
+
+def td_div(a, b):
+    difference = a - b
+    seconds_in_day = 24 * 60 * 60
+    diff_in_seconds = difference.days * seconds_in_day + difference.seconds
+    minutes, seconds = divmod(diff_in_seconds, 60)
+    return minutes, seconds
+
+
+def td_calc():
+    with open("timestamps.log", "a") as a:
+        if first_time is not None and later_time is not None:
+            minutes, seconds = td_div(later_time, first_time)
+            if minutes < 1:
+                print(f"Time elapsed: {seconds} seconds")
+                a.write(f"\n\t Time elapsed: {seconds} seconds")
+
+                return minutes, seconds
+            else:
+                a.write(f"\n\t Time elapsed: {minutes} minutes, {seconds} seconds")
+                print(f"Time elapsed: {minutes} minutes, {seconds} seconds")
+                return minutes, seconds
+        else:
+            print("Insufficient timestamps to calculate the difference.")
+            return None, None
 
 
 # Start of code
