@@ -9,6 +9,18 @@ from pynput import mouse
 from datetime import datetime
 import datetime
 import os
+import sys
+
+
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, "w")
+
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
 
 delay_time = 1
 pyautogui.PAUSE = 0.1
@@ -27,16 +39,19 @@ later_time = None
 
 
 def toggle_pause():  # gpt
+    enablePrint()
     global paused
     paused = not paused
     print("Pausing" if paused else "Unpausing")
 
 
 def exit_program():
+    enablePrint()
     global should_exit
     Timestamp("Exited: ")
     td_dif(first_time, later_time)
     td_calc()
+    blockPrint()
     should_exit = True
 
 
@@ -87,6 +102,7 @@ def on_click(x, y, button, pressed):
             click_paused = True
             print("Left click detected, Pausing...")
         else:
+            enablePrint()
             click_paused = False
             print("Loop resumed.")
 
@@ -115,6 +131,7 @@ def next_click(delay_time):
                     time.sleep(1)
                     delay_time = 3
             else:
+                enablePrint()
                 print("Loop paused.")
                 while paused or click_paused:
                     if should_exit is True:
@@ -146,7 +163,7 @@ def create_tray_icon():  # gpt bullshit
 
 def Timestamp(prefix):
     global first_time, later_time
-
+    enablePrint()
     now = datetime.datetime.now()
     dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
     print(dt_string)
@@ -199,7 +216,7 @@ if len(reason) == 0:
 else:
     cap_reason = reason.title()
 with open("timestamps.log", "a") as a:
-    a.write(f"\nReason: {cap_reason}, {len(cap_reason)}")
+    a.write(f"\nReason: {cap_reason}")
 
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
