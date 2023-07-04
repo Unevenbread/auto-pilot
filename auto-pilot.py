@@ -35,7 +35,7 @@ def toggle_pause():  # gpt
 def exit_program():
     global should_exit
     Timestamp("Exited: ")
-    td_div(first_time, later_time)
+    td_dif(first_time, later_time)
     td_calc()
     should_exit = True
 
@@ -98,7 +98,7 @@ def next_click(delay_time):
             global click_paused
             if should_exit is True:  # ends if exit true
                 break
-            elif not paused and not click_paused:  # checks for paused
+            if not paused and not click_paused:  # checks for paused
                 time.sleep(delay_time)
                 print(f"Loop running... Delay ({delay_time})")
                 org_pos = pyautogui.position()
@@ -109,7 +109,6 @@ def next_click(delay_time):
                     delay_time = (
                         0.5  # lowers delay in case so the code can make sure it clicked
                     )
-
                 elif not paused and not click_paused:
                     time.sleep(2)
                     print("Nothing found.")
@@ -128,9 +127,9 @@ def next_click(delay_time):
         print("Loop interrupted. Exiting the code.")
         # now = datetime.now()
         Timestamp("Exited: ")
-        td_div(first_time, later_time)
+        td_dif(first_time, later_time)
         td_calc()
-        # print(td_div(later_time, first_time))
+        # print(td_dif(later_time, first_time))
         exit_program
 
 
@@ -145,14 +144,12 @@ def create_tray_icon():  # gpt bullshit
     tray_icon.run()
 
 
-datetime.timedelta
-
-
 def Timestamp(prefix):
     global first_time, later_time
 
     now = datetime.datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+    print(dt_string)
     # datetime object containing current date and time
     if first_time is None:
         first_time = now
@@ -164,7 +161,7 @@ def Timestamp(prefix):
         a.write(f"\n{prefix} {dt_string}")
 
 
-def td_div(a, b):
+def td_dif(a, b):
     difference = a - b
     seconds_in_day = 24 * 60 * 60
     diff_in_seconds = difference.days * seconds_in_day + difference.seconds
@@ -175,7 +172,7 @@ def td_div(a, b):
 def td_calc():
     with open("timestamps.log", "a") as a:
         if first_time is not None and later_time is not None:
-            minutes, seconds = td_div(later_time, first_time)
+            minutes, seconds = td_dif(later_time, first_time)
             if minutes < 1:
                 print(f"Time elapsed: {seconds} seconds")
                 a.write(f"\n\t Time elapsed: {seconds} seconds")
@@ -192,12 +189,17 @@ def td_calc():
 ###### Start of code ######
 
 # first_time defined and reason inputted
+
 os.chdir("./Driving course/")
 Timestamp("\nOpened code: ")
 reason = input("Input reason: ")
-cap_reason = reason.title()
+if len(reason) == 0:
+    cap_reason = "No reason given."
+    print(cap_reason)
+else:
+    cap_reason = reason.title()
 with open("timestamps.log", "a") as a:
-    a.write(f"\nReason: {cap_reason}")
+    a.write(f"\nReason: {cap_reason}, {len(cap_reason)}")
 
 # Create a listener for mouse events
 mouse_listener = mouse.Listener(on_click=on_click)
