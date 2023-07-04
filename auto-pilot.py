@@ -166,7 +166,6 @@ def Timestamp(prefix):
     enablePrint()
     now = datetime.datetime.now()
     dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
-    print(dt_string)
     # datetime object containing current date and time
     if first_time is None:
         first_time = now
