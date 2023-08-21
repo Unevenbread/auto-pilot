@@ -10,17 +10,8 @@ from datetime import datetime
 import datetime
 import os
 import sys
-
-
-# Disable
-def blockPrint():
-    sys.stdout = open(os.devnull, "w")
-
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout__
-
+import ctypes
+import pygetwindow as gw
 
 delay_time = 1
 pyautogui.PAUSE = 0.1
@@ -38,20 +29,47 @@ fol = True
 later_time = None
 
 
+def get_active_window():
+    active_window = gw.getActiveWindow()
+    return active_window
+
+
+def bring_window_to_foreground(hwnd):
+    user32 = ctypes.windll.user32
+    user32.SetForegroundWindow(hwnd)
+
+
+# Disable
+def disable_print():
+    sys.stdout = open(os.devnull, "w")
+
+
+# Restore
+def enable_print():
+    sys.stdout = sys.__stdout__
+
+
+def alt_tab():
+    pyautogui.keyDown("alt")
+    pyautogui.press("tab")
+    pyautogui.keyUp("alt")
+    print("at")
+
+
 def toggle_pause():  # gpt
-    enablePrint()
+    enable_print()
     global paused
     paused = not paused
     print("Pausing" if paused else "Unpausing")
 
 
 def exit_program():
-    enablePrint()
+    enable_print()
     global should_exit
     Timestamp("Exited: ")
     td_dif(first_time, later_time)
     td_calc()
-    blockPrint()
+    disable_print()
     should_exit = True
 
 
@@ -86,11 +104,16 @@ def get_pos_rgb():  # used for finding pixel position and and rgb
 
 
 def pixel_click(org_pos):  # clicks location and moves back - used in next_click
+    initial_window = get_active_window()
+    initial_window_hwnd = initial_window._hWnd
+    print("Initial window not found.")
     pyautogui.PAUSE = 0.1  # sets pyautogui delay to .1 seconds to improve efficiency
     pyautogui.click(pos)
     pyautogui.moveTo(org_pos)
     pyautogui.PAUSE = delay_time  # returns pyautogui.pause to original value
+    bring_window_to_foreground(initial_window_hwnd)
     print("Next slide.")
+
     time.sleep(3)
 
 
@@ -101,8 +124,9 @@ def on_click(x, y, button, pressed):
         if pressed:
             click_paused = True
             print("Left click detected, Pausing...")
+            disable_print()
         else:
-            enablePrint()
+            enable_print()
             click_paused = False
             print("Loop resumed.")
 
@@ -125,13 +149,13 @@ def next_click(delay_time):
                     delay_time = (
                         0.5  # lowers delay in case so the code can make sure it clicked
                     )
-                elif not paused and not click_paused:
+                else:
                     time.sleep(2)
                     print("Nothing found.")
                     time.sleep(1)
                     delay_time = 3
             else:
-                enablePrint()
+                enable_print()
                 print("Loop paused.")
                 while paused or click_paused:
                     if should_exit is True:
@@ -163,7 +187,7 @@ def create_tray_icon():  # gpt bullshit
 
 def Timestamp(prefix):
     global first_time, later_time
-    enablePrint()
+    enable_print()
     now = datetime.datetime.now()
     dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
     # datetime object containing current date and time
@@ -222,6 +246,9 @@ mouse_listener = mouse.Listener(on_click=on_click)
 mouse_listener.start()
 
 # Start the main loop
-next_click(delay_time)
+try:
+    next_click(delay_time)
+except OSError:
+    exit_program()
 
 ###### End of code ######
