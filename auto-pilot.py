@@ -3,7 +3,6 @@ import time
 import keyboard
 import pystray
 from pystray import MenuItem as item
-from PIL import Image
 import sys
 from pynput import mouse
 from datetime import datetime
