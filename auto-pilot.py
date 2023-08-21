@@ -1,8 +1,6 @@
 import pyautogui
 import time
 import keyboard
-import pystray
-from pystray import MenuItem as item
 import sys
 from pynput import mouse
 from datetime import datetime
@@ -19,12 +17,10 @@ pos = (1883, 1030)
 rgb = im.getpixel(pos)
 rgb_goal = (186, 187, 186)
 org = pyautogui.position()
-# Global flag variable to control pause/unpause
 should_exit = False
 paused = False
 click_paused = False
 first_time = None
-fol = True
 later_time = None
 
 
@@ -38,21 +34,14 @@ def bring_window_to_foreground(hwnd):
     user32.SetForegroundWindow(hwnd)
 
 
-# Disable
+# Disable Terminal Output
 def disable_print():
     sys.stdout = open(os.devnull, "w")
 
 
-# Restore
+# Restore Terminal Output
 def enable_print():
     sys.stdout = sys.__stdout__
-
-
-def alt_tab():
-    pyautogui.keyDown("alt")
-    pyautogui.press("tab")
-    pyautogui.keyUp("alt")
-    print("at")
 
 
 def toggle_pause():  # gpt
@@ -72,7 +61,7 @@ def exit_program():
     should_exit = True
 
 
-# Register the Ctrl+F8 hotkey
+# Register the Ctrl+F8 and Ctrl+F9 hotkey
 keyboard.add_hotkey("ctrl+f8", toggle_pause)  # gpt
 keyboard.add_hotkey("ctrl+f9", exit_program)
 
@@ -87,6 +76,7 @@ def next_locate():  # unused because the image doesn't grab, also only works on 
             print(photo_center)
         else:
             print("Image not found.")
+
     except Exception as e:
         print("An error occurred:", str(e))
 
@@ -98,6 +88,7 @@ def get_pos_rgb():  # used for finding pixel position and and rgb
             i = i + 1
             rgb = im.getpixel((pos))
             print(pos)
+
             print(rgb)
             time.sleep(3)
 
@@ -116,7 +107,7 @@ def pixel_click(org_pos):  # clicks location and moves back - used in next_click
     time.sleep(3)
 
 
-def on_click(x, y, button, pressed):
+def on_click(button, pressed):
     global paused
     global click_paused
     if button == mouse.Button.left and paused == False:
@@ -141,7 +132,6 @@ def next_click(delay_time):
                 time.sleep(delay_time)
                 print(f"Loop running... Delay ({delay_time})")
                 org_pos = pyautogui.position()
-                rgb_color = rgb
                 current_color = pyautogui.pixel(pos[0], pos[1])
                 if current_color == rgb_goal and paused == False:
                     pixel_click(org_pos)
@@ -165,23 +155,10 @@ def next_click(delay_time):
             time.sleep(0.1)  # Add a small delay to avoid excessive CPU usage
     except KeyboardInterrupt:
         print("Loop interrupted. Exiting the code.")
-        # now = datetime.now()
         Timestamp("Exited: ")
         td_dif(first_time, later_time)
         td_calc()
-        # print(td_dif(later_time, first_time))
         exit_program
-
-
-# Create the system tray icon
-def create_tray_icon():  # gpt bullshit
-    image = Image.open("tray_icon.png")  # Replace with the path to your icon image
-    menu = (
-        item("Toggle Pause/Unpause", toggle_pause),
-        item("Exit", exit_program),
-    )
-    tray_icon = pystray.Icon("TROLLED", image, "Tooltip", menu)
-    tray_icon.run()
 
 
 def Timestamp(prefix):
@@ -228,7 +205,6 @@ def td_calc():
 ###### Start of code ######
 
 # first_time defined and reason inputted
-
 os.chdir("./Driving course/")
 Timestamp("\nOpened code: ")
 reason = input("Input reason: ")
