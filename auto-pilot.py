@@ -6,7 +6,6 @@ from pynput import mouse
 from datetime import datetime
 import datetime
 import os
-import sys
 import ctypes
 import pygetwindow as gw
 
