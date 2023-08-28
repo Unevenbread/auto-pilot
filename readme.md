@@ -40,3 +40,4 @@ This script is provided as-is, and the authors assume no responsibility for any 
 ## License
 
 This script is provided under the [WTFPL License](LICENSE). You are free to modify and distribute it, but you are responsible for ensuring its appropriate use and compliance with any relevant laws or regulations.
+CCCCCCCCCCCBCN
